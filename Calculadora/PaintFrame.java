@@ -32,16 +32,36 @@ public class PaintFrame extends JFrame {
     JPanel panel = new JPanel();
     JPanel bottomPanel = new JPanel();
 
-    JTextField operationDisplay = new JTextField(9);
+    String[][] buttonsData = {  {"AC", "ans", "+/-", "/"},
+                                {"7",  "8",    "9",  "x"},
+                                {"4",  "5",    "6",  "-"},
+                                {"1",  "2",    "3",  "+"},
+                                {"  0", "",    ",",  "="},
+                            };
 
-    String
-    JButton[][] buttons;
+    JButton[][] buttons = new JButton[buttonsData.length][buttonsData[0].length];
 
-
-    JLabel passError = new JLabel("La contraseña debe de tener al menos 8 caracteres");
+    GridBagConstraints c = new GridBagConstraints();
 
     public PaintFrame() {
-        //this.setLocationRelativeTo(null);
+        try {
+            // Set cross-platform Java L&F (also called "Metal")
+        UIManager.setLookAndFeel(
+            UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+        // handle exception
+        }
+        catch (ClassNotFoundException e) {
+        // handle exception
+        }
+        catch (InstantiationException e) {
+        // handle exception
+        }
+        catch (IllegalAccessException e) {
+        // handle exception
+        }
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panelConfig();
         this.getContentPane().add(panel);
@@ -50,6 +70,31 @@ public class PaintFrame extends JFrame {
     }
 
     public void panelConfig() {
+        panel.setLayout(new GridBagLayout());
+
+        for (int i = 0; i < buttonsData.length; i++) {
+            for (int j = 0; j < buttonsData[0].length; j++) {
+                buttons[i][j] = new JButton(buttonsData[i][j]);
+                if(buttons[i][j].getText()==null){
+                    continue;
+                }
+
+                c.fill = GridBagConstraints.BOTH;
+                c.gridy = i;
+                c.gridx = j;
+                c.gridheight = 1;
+                if (buttons[i][j].getText().equals("  0")) {
+                    buttons[i][j].setHorizontalAlignment(SwingConstants.LEFT);
+                    c.gridwidth = 2;
+                }else{
+                    c.gridwidth = 1;
+                }
+                c.ipadx = 0;
+                c.ipady = 0;
+                c.insets = new Insets(2, 2, 2, 2);
         
+                panel.add(buttons[i][j], c);
+            }
+        }
     }
 }
