@@ -32,9 +32,9 @@ public class PaintFrame extends JFrame {
     JPanel panel = new JPanel();
     JPanel bottomPanel = new JPanel();
 
-    String[][] buttonsData = {  {"AC", "ans", "+/-", "/"},
-                                {"7",  "8",    "9",  "x"},
-                                {"4",  "5",    "6",  "-"},
+    String[][] buttonsData = {  {"AC", "ans", "+/–", "/"},
+                                {"7",  "8",    "9",  "×"},
+                                {"4",  "5",    "6",  "–"},
                                 {"1",  "2",    "3",  "+"},
                                 {"  0", "",    ",",  "="},
                             };
@@ -46,8 +46,8 @@ public class PaintFrame extends JFrame {
     public PaintFrame() {
         try {
             // Set cross-platform Java L&F (also called "Metal")
-        UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } 
         catch (UnsupportedLookAndFeelException e) {
         // handle exception
@@ -75,6 +75,8 @@ public class PaintFrame extends JFrame {
         for (int i = 0; i < buttonsData.length; i++) {
             for (int j = 0; j < buttonsData[0].length; j++) {
                 buttons[i][j] = new JButton(buttonsData[i][j]);
+                buttons[i][j].setPreferredSize(new Dimension(50, 50));
+
                 if(buttons[i][j].getText()==null){
                     continue;
                 }
@@ -91,7 +93,7 @@ public class PaintFrame extends JFrame {
                 }
                 c.ipadx = 0;
                 c.ipady = 0;
-                c.insets = new Insets(2, 2, 2, 2);
+                c.insets = new Insets(1, 1, 1, 1);
         
                 panel.add(buttons[i][j], c);
             }
