@@ -30,16 +30,18 @@ public class PaintFrame extends JFrame {
     }
 
     JPanel panel = new JPanel();
-    JPanel bottomPanel = new JPanel();
+    JPanel buttonPanel = new JPanel();
+    JPanel textPanel = new JPanel();
+    JTextField numField = new JTextField();
 
     String[][] buttonsData = {  {"AC", "ans", "+/–", "/"},
                                 {"7",  "8",    "9",  "×"},
                                 {"4",  "5",    "6",  "–"},
                                 {"1",  "2",    "3",  "+"},
-                                {"  0", "",    ",",  "="},
+                                {"0",   "",    ",",  "="},
                             };
 
-    JButton[][] buttons = new JButton[buttonsData.length][buttonsData[0].length];
+    public JButton[][] buttons = new JButton[buttonsData.length][buttonsData[0].length];
 
     GridBagConstraints c = new GridBagConstraints();
 
@@ -47,7 +49,7 @@ public class PaintFrame extends JFrame {
         try {
             // Set cross-platform Java L&F (also called "Metal")
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         } 
         catch (UnsupportedLookAndFeelException e) {
         // handle exception
@@ -66,11 +68,13 @@ public class PaintFrame extends JFrame {
         panelConfig();
         this.getContentPane().add(panel);
         this.pack();
+        this.setResizable(false);
         centerFrame(this.getSize());
     }
 
     public void panelConfig() {
-        panel.setLayout(new GridBagLayout());
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        buttonPanel.setLayout(new GridBagLayout());
 
         for (int i = 0; i < buttonsData.length; i++) {
             for (int j = 0; j < buttonsData[0].length; j++) {
@@ -85,8 +89,8 @@ public class PaintFrame extends JFrame {
                 c.gridy = i;
                 c.gridx = j;
                 c.gridheight = 1;
-                if (buttons[i][j].getText().equals("  0")) {
-                    buttons[i][j].setHorizontalAlignment(SwingConstants.LEFT);
+                if (buttons[i][j].getText().equals("0")) {
+                    //buttons[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                     c.gridwidth = 2;
                 }else{
                     c.gridwidth = 1;
@@ -95,8 +99,18 @@ public class PaintFrame extends JFrame {
                 c.ipady = 0;
                 c.insets = new Insets(1, 1, 1, 1);
         
-                panel.add(buttons[i][j], c);
+                buttonPanel.add(buttons[i][j], c);                
             }
         }
+        //style text field
+        numField.setFont(new Font("Dialog", Font.PLAIN, 35));
+        numField.setHorizontalAlignment(4);
+        numField.setOpaque(false);
+        numField.setBorder(new EmptyBorder(new Insets(0, 4, 6, 4)));
+
+        panel.add(numField);
+        panel.add(buttonPanel);
+
+        execActions();
     }
 }
