@@ -32,13 +32,13 @@ public class PaintFrame extends JFrame {
     JPanel panel = new JPanel();
     JPanel buttonPanel = new JPanel();
     JPanel textPanel = new JPanel();
-    JTextField numField = new JTextField();
+    JTextField numField = new JTextField("0");
 
     String[][] buttonsData = {  {"AC", "ans", "+/–", "/"},
                                 {"7",  "8",    "9",  "×"},
                                 {"4",  "5",    "6",  "–"},
                                 {"1",  "2",    "3",  "+"},
-                                {"0",   "",    ",",  "="},
+                                {"0",   "",    ".",  "="},
                             };
 
     public JButton[][] buttons = new JButton[buttonsData.length][buttonsData[0].length];
@@ -103,7 +103,7 @@ public class PaintFrame extends JFrame {
             }
         }
         //style text field
-        numField.setFont(new Font("Dialog", Font.PLAIN, 35));
+        numField.setFont(new Font("Dialog", Font.PLAIN, 33));
         numField.setHorizontalAlignment(4);
         numField.setOpaque(false);
         numField.setBorder(new EmptyBorder(new Insets(0, 4, 6, 4)));

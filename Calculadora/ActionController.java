@@ -4,12 +4,15 @@ import java.awt.Component;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
+import javax.swing.JButton;
 
 public class ActionController implements ActionListener {
     PaintFrame viewPaintFrame;
     String dialog = "";
     boolean erase = false;
+    String operand = "";
+    String prevNum = "";
+    String ansNum = "";
     ArrayList<String> nums = new ArrayList<String>();
     ArrayList<Integer> operations = new ArrayList<Integer>();
 
@@ -25,6 +28,41 @@ public class ActionController implements ActionListener {
         } 
     }
 
+    private String Operations(String operand) {
+        double num1 = Double.parseDouble(prevNum);
+        double num2 = Double.parseDouble(dialog);
+        double result = 0;
+
+        if (operand.equals("+")) {
+            result = num1 + num2;
+        }else
+        if (operand.equals("–")) {
+            result = num1 - num2;
+        }else
+        if (operand.equals("×")) {
+            result = num1 * num2;
+        }else
+        if (operand.equals("/")) {
+            result = num1 / num2;
+        }
+        
+        String strResult = String.valueOf(result);
+
+        //Lógica para que el numero nunca tenga mas caracteres de los que entran en el cuadro de texto
+        if (strResult.length()>11 && strResult.indexOf(".")!=-1) {
+            if (strResult.indexOf("E")!=-1){
+                int numCola = strResult.length() - strResult.indexOf("E");
+                return strResult.substring(0, 10-numCola) + strResult.substring(strResult.indexOf("E"), strResult.length());
+            }else{
+                return strResult.substring(0, 11);
+            }
+        }else if (strResult.substring(strResult.length()-2, strResult.length()).equals(".0")){
+            return strResult.substring(0, strResult.length()-2);
+        }
+
+        return strResult;
+    }
+
     @Override
     public void actionPerformed(ActionEvent ae) {
         
@@ -32,39 +70,52 @@ public class ActionController implements ActionListener {
        for (int i = 0; i < viewPaintFrame.buttons.length; i++) {
             for (int j = 0; j < viewPaintFrame.buttons[0].length; j++) {
                 if(ae.getSource().equals(viewPaintFrame.buttons[i][j])){
-                    if (viewPaintFrame.buttons[i][j].getText().matches("\\d")) {  
-                        if (erase==true) {
+                    if (viewPaintFrame.buttons[i][j].getText().matches("\\d") && dialog.length()<=10) {  
+                        if(erase){
                             dialog="";
                             erase=false;
                         }
+
                         dialog = dialog + viewPaintFrame.buttons[i][j].getText();
                         viewPaintFrame.numField.setText(dialog);
-
-
-                        System.out.println(viewPaintFrame.buttons[i][j].getText());
                     }
-                    if (viewPaintFrame.buttons[i][j].getText().matches("[+–×/]")) {                        
-                        if (viewPaintFrame.buttons[i][j].getText().equals("+")) {
-                            nums.add(dialog);
-                            operations.add(0);
-                            erase = true;
-                        }
+                    if (viewPaintFrame.buttons[i][j].getText().matches("[+–×/]") && !dialog.equals(prevNum)) {
+                        if (!prevNum.equals("")) {
+                            dialog=Operations(operand);
+                            viewPaintFrame.numField.setText(dialog);
+                            
+                        }                    
+                        operand = viewPaintFrame.buttons[i][j].getText();
+                        prevNum = dialog;
+                        erase = true;
                     } 
                     if (viewPaintFrame.buttons[i][j].getText().equals("=")) {
-                        int result=Integer.parseInt(dialog);
-                        for (int k = 0; k < nums.size(); k++) {
-                            result += Integer.parseInt(nums.get(k));
-                        }
-                        dialog = String.valueOf(result);
+                        dialog = Operations(operand);
                         viewPaintFrame.numField.setText(dialog);
-                        erase = true;
+                        ansNum = dialog;
+                        prevNum = "";
+                        erase = false;
                     }
                     
                     if (viewPaintFrame.buttons[i][j].getText().equals("AC")) {
-                        dialog = String.valueOf("");
+                        dialog = String.valueOf("0");
                         viewPaintFrame.numField.setText(dialog);
-                    }       
-                }               
+                        prevNum = "";
+                        erase=true;
+                    }
+
+                    if (viewPaintFrame.buttons[i][j].getText().equals("ans")) {
+                        dialog = ansNum;
+                        viewPaintFrame.numField.setText(dialog);
+                        erase=true;
+                    }                   
+                    
+                    if (viewPaintFrame.buttons[i][j].getText().equals(".")) {
+                        dialog = ansNum;
+                        viewPaintFrame.numField.setText(dialog);
+                        erase=true;
+                    }  
+                }                
             }
         }
     }
