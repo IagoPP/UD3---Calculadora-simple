@@ -1,10 +1,7 @@
 package Calculadora;
 
-import java.awt.Component;
 import java.awt.event.*;
 import java.util.ArrayList;
-
-import javax.swing.JButton;
 
 public class ActionController implements ActionListener {
     PaintFrame viewPaintFrame;
@@ -13,8 +10,6 @@ public class ActionController implements ActionListener {
     String operand = "";
     String prevNum = "";
     String ansNum = "";
-    ArrayList<String> nums = new ArrayList<String>();
-    ArrayList<Integer> operations = new ArrayList<Integer>();
 
     public ActionController(PaintFrame vPaint) {
         viewPaintFrame = vPaint;
@@ -70,14 +65,15 @@ public class ActionController implements ActionListener {
        for (int i = 0; i < viewPaintFrame.buttons.length; i++) {
             for (int j = 0; j < viewPaintFrame.buttons[0].length; j++) {
                 if(ae.getSource().equals(viewPaintFrame.buttons[i][j])){
-                    if (viewPaintFrame.buttons[i][j].getText().matches("\\d") && dialog.length()<=10) {  
+                    if (viewPaintFrame.buttons[i][j].getText().matches("[\\d.]")) {  
                         if(erase){
                             dialog="";
                             erase=false;
                         }
-
-                        dialog = dialog + viewPaintFrame.buttons[i][j].getText();
-                        viewPaintFrame.numField.setText(dialog);
+                        if(dialog.length()<=10){
+                            dialog = dialog + viewPaintFrame.buttons[i][j].getText();
+                            viewPaintFrame.numField.setText(dialog);
+                        }
                     }
                     if (viewPaintFrame.buttons[i][j].getText().matches("[+–×/]") && !dialog.equals(prevNum)) {
                         if (!prevNum.equals("")) {
@@ -108,13 +104,18 @@ public class ActionController implements ActionListener {
                         dialog = ansNum;
                         viewPaintFrame.numField.setText(dialog);
                         erase=true;
-                    }                   
+                    }
                     
-                    if (viewPaintFrame.buttons[i][j].getText().equals(".")) {
-                        dialog = ansNum;
+                    if (viewPaintFrame.buttons[i][j].getText().equals("+/–")) {
+                        if (Double.parseDouble(dialog)<0) {
+                            dialog = dialog.substring(1, dialog.length());
+                        }else if (Double.parseDouble(dialog)>=0) {
+                            dialog = "-" + dialog;
+                        }
+                        
                         viewPaintFrame.numField.setText(dialog);
                         erase=true;
-                    }  
+                    }   
                 }                
             }
         }
